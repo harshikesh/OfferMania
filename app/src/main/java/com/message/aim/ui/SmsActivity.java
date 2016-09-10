@@ -112,39 +112,11 @@ public class SmsActivity extends AppCompatActivity {
     MESSAGE_TYPE_SENT   = 2;
     MESSAGE_TYPE_DRAFT  = 3;
     MESSAGE_TYPE_OUTBOX = 4;*/
-    ContentResolver contentResolver = getContentResolver();
-    Cursor smsInboxCursor =
-        contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null);
+
 
     JSONObject superObj = new JSONObject();
 
-    int indexBody = smsInboxCursor.getColumnIndex("body");
-    int indexAddress = smsInboxCursor.getColumnIndex("address");
-    int threadId = smsInboxCursor.getColumnIndex("thread_id");
-    int seen = smsInboxCursor.getColumnIndex("seen");
-    int type = smsInboxCursor.getColumnIndex("type");
-    int subject = smsInboxCursor.getColumnIndex("subject");
-    int person = smsInboxCursor.getColumnIndex("person");
-    int date = smsInboxCursor.getColumnIndex("date");
-    if (indexBody < 0 || !smsInboxCursor.moveToFirst()) return;
-    do {
-      String sdate = smsInboxCursor.getString(date);
-      String saddress = smsInboxCursor.getString(indexAddress);
-      String sseen = smsInboxCursor.getString(seen);
-      String ssubject = smsInboxCursor.getString(subject);
-      String sbody = smsInboxCursor.getString(indexBody);
 
-      SmsObject smsobj = new SmsObject(ssubject, sbody, sdate, sseen);
-      if (smsObjectHash.containsKey(saddress)) {
-        ArrayList<SmsObject> obj = smsObjectHash.get(saddress);
-        obj.add(smsobj);
-      } else {
-        ArrayList<SmsObject> obj = new ArrayList<>();
-        obj.add(smsobj);
-        smsObjectHash.put(saddress, obj);
-      }
-    } while (smsInboxCursor.moveToNext());
-    smsInboxCursor.close();
 
     JSONObject js = new JSONObject();
     for (Map.Entry<String, ArrayList<SmsObject>> entry : smsObjectHash.entrySet()) {
@@ -174,7 +146,7 @@ public class SmsActivity extends AppCompatActivity {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    postData(superObj);
+  //  postData(superObj);
   }
 
   private void postData(JSONObject superObj) {
