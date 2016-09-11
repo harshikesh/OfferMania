@@ -1,3 +1,4 @@
+/*
 package com.message.aim.database;
 
 import android.content.ContentValues;
@@ -136,4 +137,4 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // return count
     return cursor.getCount();
   }
-}
+}*/

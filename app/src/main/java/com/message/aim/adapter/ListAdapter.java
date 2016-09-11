@@ -48,9 +48,8 @@ public class ListAdapter extends BaseAdapter {
     } else {
       viewHolder = (CardViewHolder) row.getTag();
     }
-    if(true) {
+
       viewHolder.mTextView.setText("" + mSmsObjects.get(position).getMsg());
-    }
     return row;
   }
 
