@@ -47,17 +47,17 @@ public class SmsActivity extends AppCompatActivity {
   private AppController mDataMan;
   private SharedPreferences mPref;
 
-  @TargetApi(Build.VERSION_CODES.M) @Override protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_sms);
     mDataMan = ((AppController) getApplication());
     mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    int hasLocationPermission = checkSelfPermission(Manifest.permission.READ_SMS);
-    List<String> permissions = new ArrayList<String>();
-    if (hasLocationPermission != PackageManager.PERMISSION_GRANTED) {
-      ActivityCompat.requestPermissions(SmsActivity.this,
-          new String[] { "android.permission.READ_SMS" }, REQUEST_CODE_ASK_PERMISSIONS);
-    }
+    //int hasLocationPermission = checkSelfPermission(Manifest.permission.READ_SMS);
+    //List<String> permissions = new ArrayList<String>();
+    //if (hasLocationPermission != PackageManager.PERMISSION_GRANTED) {
+    //  ActivityCompat.requestPermissions(SmsActivity.this,
+    //      new String[] { "android.permission.READ_SMS" }, REQUEST_CODE_ASK_PERMISSIONS);
+    //}
 
     smsObjectHash = new HashMap<>();
     mRecyclerView = (RecyclerView) findViewById(R.id.companyList);
@@ -78,13 +78,13 @@ public class SmsActivity extends AppCompatActivity {
     // specify an adapter
     mAdapter = new CategoryGridAdapter(this);
     mRecyclerView.setAdapter(mAdapter);
-    if (hasLocationPermission == PackageManager.PERMISSION_GRANTED) {
+   // if (hasLocationPermission == PackageManager.PERMISSION_GRANTED) {
       mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
       if (!mPref.getBoolean(Constants.FIRST_TIME, false)) {
         Log.d(TAG, "first time");
         refreshSmsInbox();
       }
-    }
+    //}
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, String[] permissions,

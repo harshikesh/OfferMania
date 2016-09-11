@@ -7,6 +7,8 @@ import java.io.File;
 
 public class Utilities {
 
+
+  public static final String COMP = "comp";
   private static String PAGE0 = "Category";
   private static String PAGE1 = "Try";
   private static String PAGE2 = "Attempted";

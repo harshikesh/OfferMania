@@ -1,15 +1,20 @@
 package com.message.aim.ui;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import com.message.aim.R;
 import com.message.aim.model.SmsObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -18,16 +23,28 @@ import java.util.Map;
 public class SplashActivity extends AppCompatActivity {
 
   private static final String TAG = "SMS";
-  private HashMap<String, ArrayList<SmsObject>> smsObjectHash;
-  static HashMap<String, String> prehash = new HashMap<>();
+  private static HashMap<String, ArrayList<SmsObject>> smsObjectHash;
+  public static HashMap<String, String> prehash = new HashMap<>();
+  public static LinkedHashMap<String, ArrayList<SmsObject>> compList;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_splash);
     smsObjectHash = new HashMap<>();
-
     init();
     getAllMessages();
     processSms();
+    nextCall();
+  }
+
+  private void nextCall() {
+    Intent in = new Intent(SplashActivity.this, SmsActivity.class);
+    startActivity(in);
+    finish();
+    //SMSActivity1 mFragment = SMSActivity1.newInstance();
+    //FragmentManager fragmentManager = getSupportFragmentManager();
+    //fragmentManager.beginTransaction()
+    //    .replace(R.id.main_fragment_container, mFragment).commit();
   }
 
   private void init() {
@@ -79,6 +96,7 @@ public class SplashActivity extends AppCompatActivity {
   }
 
   private void processSms() {
+    compList = new LinkedHashMap<>();
     Log.d(TAG, "Processing messages ");
     for (Map.Entry<String, ArrayList<SmsObject>> entry : smsObjectHash.entrySet()) {
       Log.d(TAG, "Sender  : " + entry.getKey());
@@ -88,9 +106,10 @@ public class SplashActivity extends AppCompatActivity {
       String temp = sender.substring(index);
 
       if (prehash.containsKey(temp)) {
-        for (SmsObject sms : smsObjectHash.get(sender)) {
-          parseSms(sms);
-        }
+        compList.put(prehash.get(temp), smsObjectHash.get(sender));
+        //for (SmsObject sms : smsObjectHash.get(sender)) {
+        //  parseSms(sms);
+        //}
       } else {
         continue;
       }
@@ -98,7 +117,6 @@ public class SplashActivity extends AppCompatActivity {
   }
 
   private void parseSms(SmsObject sms) {
-
   }
 }
 

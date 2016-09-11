@@ -15,7 +15,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.message.aim.R;
 import com.message.aim.ui.MainActivity;
+import com.message.aim.ui.SplashActivity;
 import com.message.aim.utils.Utilities;
+import java.util.ArrayList;
+import java.util.Set;
 
 import static com.message.aim.utils.Utilities.categoryList;
 
@@ -27,6 +30,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
   private static final String CATEGORY = "category";
 
   private final Context mContext;
+  private ArrayList<String> array = null;
   private SharedPreferences mPref;
 
   public class ListViewHolder extends RecyclerView.ViewHolder
@@ -36,7 +40,7 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
     private ImageView mImage;
     private LinearLayout mContainer;
     private LinearLayout mTextLayout;
-    private String id;
+    private int id;
 
     public ListViewHolder(View itemView) {
       super(itemView);
@@ -44,17 +48,17 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
       this.mImage = (ImageView) itemView.findViewById(R.id.img_grid);
       this.mContainer = (LinearLayout) itemView.findViewById(R.id.container);
       this.mTextLayout = (LinearLayout) itemView.findViewById(R.id.textLayout);
-      this.id = "";
       itemView.setOnClickListener(this);
       itemView.setOnLongClickListener(this);
     }
 
     @Override public void onClick(View v) {
       int position = getAdapterPosition();
-      String id = ((ListViewHolder) v.getTag()).id;
-      Log.d("TAG : Adapter", id);
+      int id = ((ListViewHolder) v.getTag()).id;
+      Log.d("TAG : Adapter", ""+id);
       Intent intent = new Intent(mContext, MainActivity.class);
-      intent.putExtra(Utilities.ID,id);
+      intent.putExtra(Utilities.ID, id);
+      intent.putExtra(Utilities.COMP, array.get(id));
       mContext.startActivity(intent);
     }
 
@@ -65,6 +69,8 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
 
   public CategoryGridAdapter(Context context) {
     mContext = context;
+    array = new ArrayList<>();
+    array.addAll(SplashActivity.compList.keySet());
     mPref = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
   }
 
@@ -78,18 +84,13 @@ public class CategoryGridAdapter extends RecyclerView.Adapter<CategoryGridAdapte
   @Override public void onBindViewHolder(ListViewHolder viewHolder, int position) {
     // - get element from your dataset at this position
     // - replace the contents of the view with that element
-    viewHolder.mTopicName.setText(categoryList[position]);
-    if (mPref.getBoolean(categoryList[position], false)) {
-      viewHolder.mTextLayout.setBackgroundColor(
-          mContext.getResources().getColor(R.color.greentranslucent));
-    }
+    viewHolder.mTopicName.setText(array.get(position));
     viewHolder.mContainer.setTag(viewHolder);
-    viewHolder.id = "" + position;
-    Glide.with(mContext).load("").into(viewHolder.mImage);
+    viewHolder.id = position;
   }
 
   @Override public int getItemCount() {
-    return categoryList.length;
+    return SplashActivity.compList.size();
   }
 }
 
